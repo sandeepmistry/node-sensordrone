@@ -1,0 +1,22 @@
+{
+  "name": "sensordrone",
+  "version": "0.0.0",
+  "description": "node.js lib for the Sensordrone",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sandeepmistry/node-sensordrone.git"
+  },
+  "keywords": [
+    "sensordrone",
+    "sensor drone"
+  ],
+  "author": "Sandeep Mistry",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sandeepmistry/node-sensordrone/issues"
+  }
+}

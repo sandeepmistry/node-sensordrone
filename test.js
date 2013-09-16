@@ -23,6 +23,12 @@ Sensordrone.discover(function(sensordrone) {
         });
       },
       function(callback) {
+        console.log('set LEDs');
+        sensordrone.setLeds(255, 255, 255, 255, 255, 255, function() {
+          callback();
+        });
+      },
+      function(callback) {
         console.log('read ambient temperature');
         sensordrone.readAmbientTemperature(function(temperature) {
           console.log('ambient temperature = %d °C', temperature.toFixed(1));

@@ -91,6 +91,12 @@ Sensordrone.prototype.readBatteryVoltage = function(callback) {
   });
 };
 
+Sensordrone.prototype.setLeds = function(leftRed, leftGreen, leftBlue, rightRed, rightGreen, rightBlue, callback) {
+  this.txData([0x05, 0x08, 0x15, leftRed, leftGreen, leftBlue, rightRed, rightGreen, rightBlue, 0x00], function(data) {
+    callback();
+  });
+};
+
 Sensordrone.prototype.readAmbientTemperature = function(callback) {
   this.txData([0x05, 0x06, 0x10, 0x00, 0x40, 0xe3, 0x02, 0x00], function(data) {
     var adc = data.readUInt16BE(1) & 0xfffc;

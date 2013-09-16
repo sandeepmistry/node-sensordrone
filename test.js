@@ -61,6 +61,28 @@ Sensordrone.discover(function(sensordrone) {
         });
       },
       function(callback) {
+        console.log('enable altitude');
+        sensordrone.enableAltitude(function() {
+          callback();
+        });
+      },
+      function(callback) {
+        console.log('read altitude');
+        setTimeout(function() {
+          sensordrone.readAltitude(function(altitude) {
+            console.log('altitude = %d m', altitude.toFixed(1));
+
+            callback();
+          });
+        }, 1000);
+      },
+      function(callback) {
+        console.log('disable altitude');
+        sensordrone.disableAltitude(function() {
+          callback();
+        });
+      },
+      function(callback) {
         console.log('disconnect');
         sensordrone.disconnect(callback);
       }

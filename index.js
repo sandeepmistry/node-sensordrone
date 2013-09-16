@@ -140,6 +140,18 @@ Sensordrone.prototype.readPressure = function(callback) {
   }.bind(this));
 };
 
+Sensordrone.prototype.enableAltitude = Sensordrone.prototype.enablePressure;
+
+Sensordrone.prototype.disableAltitude = Sensordrone.prototype.disablePressure;
+
+Sensordrone.prototype.readAltitude = function(callback) {
+  this.readPressure(function(pressure) {
+    var pRatio = pressure / 101326.0;
+    var altitudeMeters = ((1 - Math.pow(pRatio, 0.1902632)) * 44330.77);
+
+    callback(altitudeMeters);
+  }.bind(this));
+};
 
 
 module.exports = Sensordrone;

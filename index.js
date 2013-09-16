@@ -109,4 +109,37 @@ Sensordrone.prototype.readHumidity = function(callback) {
   });
 };
 
+Sensordrone.prototype.enablePressure = function(callback) {
+  this.txData([0x05, 0x07, 0x11, 0x00, 0x60, 0x01, 0x26, 0x3f, 0x00], function(data) {
+    this.txData([0x05, 0x07, 0x11, 0x00, 0x60, 0x01, 0x26, 0x38, 0x00], function(data) {
+      this.txData([0x05, 0x07, 0x11, 0x00, 0x60, 0x01, 0x13, 0x07, 0x00], function(data) {
+        this.txData([0x05, 0x07, 0x11, 0x00, 0x60, 0x01, 0x26, 0x39, 0x00], function(data) {
+          callback();
+        }.bind(this));
+      }.bind(this));
+    }.bind(this));
+  }.bind(this));
+};
+
+Sensordrone.prototype.disablePressure = function(callback) {
+  this.txData([0x05, 0x07, 0x11, 0x00, 0x60, 0x01, 0x26, 0x3f, 0x00], function(data) {
+    callback();
+  }.bind(this));
+};
+
+Sensordrone.prototype.readPressure = function(callback) {
+
+  this.txData([0x05, 0x05, 0x10, 0x00, 0x60, 0x01, 0x05], function(data) {
+    var pressureIntValue = data.readUInt16BE(1);
+    var pressureIntBits = (data.readUInt8(3) & 0x0c);
+    var pressureDecBits = (data.readUInt8(3) & 0x03);
+    
+    var pascals = (pressureIntValue * 4.0) + pressureIntBits + (pressureDecBits / 4.0);
+
+    callback(pascals);
+  }.bind(this));
+};
+
+
+
 module.exports = Sensordrone;

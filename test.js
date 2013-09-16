@@ -39,6 +39,28 @@ Sensordrone.discover(function(sensordrone) {
         });
       },
       function(callback) {
+        console.log('enable pressure');
+        sensordrone.enablePressure(function() {
+          callback();
+        });
+      },
+      function(callback) {
+        console.log('read pressure');
+        setTimeout(function() {
+          sensordrone.readPressure(function(pressure) {
+            console.log('pressure = %d Pa', pressure.toFixed(1));
+
+            callback();
+          });
+        }, 1000);
+      },
+      function(callback) {
+        console.log('disable pressure');
+        sensordrone.disablePressure(function() {
+          callback();
+        });
+      },
+      function(callback) {
         console.log('disconnect');
         sensordrone.disconnect(callback);
       }

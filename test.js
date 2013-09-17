@@ -9,6 +9,11 @@ Sensordrone.discover(function(sensordrone) {
       function(callback) {
         console.log('connect');
         sensordrone.connect(callback);
+
+        sensordrone.on('disconnect', function() {
+          console.log('disconnected!');
+          process.exit(0);
+        });
       },
       function(callback) {
         console.log('discoverServicesAndCharacteristics');
@@ -89,12 +94,31 @@ Sensordrone.discover(function(sensordrone) {
         });
       },
       function(callback) {
+        console.log('enable RGBC');
+        sensordrone.enableRGBC(function() {
+          callback();
+        });
+      },
+      function(callback) {
+        console.log('read RGBC');
+        setTimeout(function() {
+          sensordrone.readRGBC(function(r, g, b, c, lux, temp) {
+            console.log('RGBC = %d %d %d %d %d Lux %d K', r.toFixed(1), g.toFixed(1), b.toFixed(1), c.toFixed(1), lux.toFixed(1), temp.toFixed(1));
+
+            callback();
+          });
+        }, 1000);
+      },
+      function(callback) {
+        console.log('disable RGBC');
+        sensordrone.disableRGBC(function() {
+          callback();
+        });
+      },
+      function(callback) {
         console.log('disconnect');
         sensordrone.disconnect(callback);
       }
-    ],
-    function() {
-      process.exit(0);
-    }
+    ]
   );
 });

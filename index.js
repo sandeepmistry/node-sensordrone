@@ -13,6 +13,8 @@ function Sensordrone(peripheral) {
   this._rxCharacteristic = null;
 
   this.uuid = peripheral.uuid;
+
+  this._peripheral.on('disconnect', this.onDisconnect.bind(this));
 }
 
 util.inherits(Sensordrone, events.EventEmitter);
@@ -34,6 +36,10 @@ Sensordrone.discover = function(callback) {
   });
 };
 
+Sensordrone.prototype.onDisconnect = function() {
+  this.emit('disconnect');
+};
+
 Sensordrone.prototype.toString = function() {
   return JSON.stringify({
     uuid: this.uuid
@@ -49,7 +55,7 @@ Sensordrone.prototype.disconnect = function(callback) {
 };
 
 Sensordrone.prototype.discoverServicesAndCharacteristics = function(callback) {
-  this._peripheral.discoverSomeServicesAndCharacteristics([SERVICE_UUID], [], function(error, services, characteristics) {
+  this._peripheral.discoverSomeServicesAndCharacteristics([], [], function(error, services, characteristics) {
     for (var i in characteristics) {
       var characteristic = characteristics[i];
       if (characteristic.uuid === TX_UUID) {
@@ -156,6 +162,63 @@ Sensordrone.prototype.readAltitude = function(callback) {
     var altitudeMeters = ((1 - Math.pow(pRatio, 0.1902632)) * 44330.77);
 
     callback(altitudeMeters);
+  }.bind(this));
+};
+
+Sensordrone.prototype.enableRGBC = function(callback) {
+  this.txData([0x05, 0x03, 0x35, 0x01, 0x00], function(data) {
+    this.txData([0x05, 0x07, 0x11, 0x00, 0x39, 0x01, 0x80, 0x01, 0x00], function(data) {
+      this.txData([0x05, 0x07, 0x11, 0x00, 0x39, 0x01, 0x81, 0x01, 0x00], function(data) {
+        this.txData([0x05, 0x07, 0x11, 0x00, 0x39, 0x01, 0x80, 0x03, 0x00], function(data) {
+          callback();
+        }.bind(this));
+      }.bind(this));
+    }.bind(this));
+  }.bind(this));
+};
+
+Sensordrone.prototype.disableRGBC = function(callback) {
+  this.txData([0x05, 0x03, 0x35, 0x00, 0x00], function(data) {
+    this.txData([0x05, 0x07, 0x11, 0x00, 0x39, 0x01, 0x80, 0x00, 0x00], function(data) {
+      callback();
+    }.bind(this));
+  }.bind(this));
+};
+
+Sensordrone.prototype.readRGBC = function(callback) {
+  this.txData([0x05, 0x06, 0x10, 0x00, 0x39, 0x90, 0x08, 0x00], function(data) {
+
+    var R = data.readUInt16LE(3);
+    var G = data.readUInt16LE(1);
+    var B = data.readUInt16LE(5);
+    var C = data.readUInt16LE(7);
+
+    var Rcal = 0.2639626007;
+    var Gcal = 0.2935368922;
+    var Bcal = 0.379682891;
+    var Ccal = 0.2053011829;
+    
+    R += R * Rcal;
+    G += G * Gcal;
+    B += B * Bcal;
+    C += C * Ccal;
+    
+    var X = -0.14282 * R + 1.54924 * G + -0.95641 * B;
+    var Y = -0.32466 * R + 1.57837 * G + -0.73191 * B;
+    var Z = -0.68202 * R + 0.77073 * G + 0.56332 * B;
+    
+    var x = X / (X + Y + Z);
+    var y = Y / (X + Y + Z);
+    
+    var n = (x - 0.3320) / (0.1858 - y);
+    
+    var CCT = 449.0 * Math.pow(n, 3) + 3525.0 * Math.pow(n, 2) + 6823.3 * n + 5520.33;
+    
+    if (Y < 0) {
+        Y = 0;
+    }
+
+    callback(R, G, B, C, Y, CCT);
   }.bind(this));
 };
 

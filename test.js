@@ -168,6 +168,28 @@ Sensordrone.discover(function(sensordrone) {
         });
       },
       function(callback) {
+        console.log('enable reducing gas');
+        sensordrone.enableReducingGas(function() {
+          callback();
+        });
+      },
+      function(callback) {
+        console.log('read reducing gas');
+        setTimeout(function() {
+          sensordrone.readReducingGas(function(ohms) {
+            console.log('reducing gas = %d Ω', ohms.toFixed(1));
+
+            callback();
+          });
+        }, 1000);
+      },
+      function(callback) {
+        console.log('disable reducing gas');
+        sensordrone.disableReducingGas(function() {
+          callback();
+        });
+      },
+      function(callback) {
         console.log('disconnect');
         sensordrone.disconnect(callback);
       }

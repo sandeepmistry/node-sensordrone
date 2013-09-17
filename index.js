@@ -67,9 +67,7 @@ Sensordrone.prototype.discoverServicesAndCharacteristics = function(callback) {
 
     this._rxCharacteristic.on('read', this.onRxData.bind(this));
     this._rxCharacteristic.notify(true, function() {
-      this.txData([0x05, 0x02, 0x40, 0x00], function(data) {
-        callback();
-      });
+      this.readPrecisionGasCalibration(callback);
     }.bind(this));
   }.bind(this));
 };
@@ -241,7 +239,7 @@ Sensordrone.prototype.readIrTemperature = function(callback) {
 
     this.txData([0x05, 0x06, 0x10, 0x00, 0x41, 0x01, 0x02, 0x00], function(data) {
       // Terms used for calculating the objects Temperature
-      var a1 = 1.75* Math.pow(10, -3);
+      var a1 = 1.75 * Math.pow(10, -3);
       var a2 = -1.678 * Math.pow(10, -5);
       var T_REF = 298.15;
       var b0 = -2.94 * Math.pow(10, -5);
@@ -265,6 +263,44 @@ Sensordrone.prototype.readIrTemperature = function(callback) {
 
       callback(temperature - 273.15);
     }.bind(this));
+  }.bind(this));
+};
+
+Sensordrone.prototype.readPrecisionGasCalibration = function(callback) {
+
+  this.txData([0x05, 0x02, 0x40, 0x00], function(data) {
+    this._precisionGasSensitivity = data.readUInt16LE(1) / 1000.0;
+    this._precisionGasBaseline = data.readUInt16LE(3);
+
+    callback();
+  }.bind(this));
+};
+
+Sensordrone.prototype.readPrecisionGas = function(callback) {
+  this.txData([0x05, 0x02, 0x20, 0x00], function(data) {
+    var gaintStage = data[3];
+    
+    var gainRes = [
+      2200000,
+      301961,
+      113793,
+      34452,
+      13911,
+      6978,
+      3494,
+      2747
+    ];
+    
+    var ADC = data.readUInt16LE(1);
+    var deltaADC = ADC - this._precisionGasBaseline;
+    var gasResponse = (deltaADC * 3.0 * Math.pow(10, 9)) / 4096.0;
+    if (deltaADC < 0.0) {
+        gasResponse = 0.0;
+    }
+    var gain = gainRes[gaintStage];
+    var ppmCO = gasResponse / (this._precisionGasSensitivity * gain);
+
+    callback(ppmCO);
   }.bind(this));
 };
 

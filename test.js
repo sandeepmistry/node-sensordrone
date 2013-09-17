@@ -138,6 +138,14 @@ Sensordrone.discover(function(sensordrone) {
         });
       },
       function(callback) {
+        console.log('read precision gas');
+        sensordrone.readPrecisionGas(function(ppmCO) {
+          console.log('precision gas = %d ppm CO', ppmCO.toFixed(1));
+          
+          callback();
+        });
+      },
+      function(callback) {
         console.log('disconnect');
         sensordrone.disconnect(callback);
       }

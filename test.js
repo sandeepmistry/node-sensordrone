@@ -146,6 +146,28 @@ Sensordrone.discover(function(sensordrone) {
         });
       },
       function(callback) {
+        console.log('enable oxidizing gas');
+        sensordrone.enableOxidizingGas(function() {
+          callback();
+        });
+      },
+      function(callback) {
+        console.log('read oxidizing gas');
+        setTimeout(function() {
+          sensordrone.readOxidizingGas(function(ohms) {
+            console.log('oxidizing gas = %d Ω', ohms.toFixed(1));
+
+            callback();
+          });
+        }, 1000);
+      },
+      function(callback) {
+        console.log('disable oxidizing gas');
+        sensordrone.disableOxidizingGas(function() {
+          callback();
+        });
+      },
+      function(callback) {
         console.log('disconnect');
         sensordrone.disconnect(callback);
       }

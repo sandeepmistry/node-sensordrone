@@ -307,4 +307,27 @@ Sensordrone.prototype.readPrecisionGas = function(callback) {
   }.bind(this));
 };
 
+Sensordrone.prototype.enableOxidizingGas = function(callback) {
+  this.txData([0x05, 0x03, 0x18, 0x84, 0x00], function(data) {
+    callback();
+  }.bind(this));
+};
+
+Sensordrone.prototype.disableOxidizingGas = function(callback) {
+  this.txData([0x05, 0x03, 0x18, 0x00, 0x00], function(data) {
+    callback();
+  }.bind(this));
+};
+
+Sensordrone.prototype.readOxidizingGas = function(callback) {
+  this.txData([0x05, 0x02, 0x1c, 0x00], function(data) {
+    var ADC = data.readUInt16LE(1);
+    var voltage = (ADC / 4095.0) * 3.3;
+
+    var resistance = (18000.0 * 3.3 / voltage) - 18000.0;
+
+    callback(resistance);
+  }.bind(this));
+};
+
 module.exports = Sensordrone;

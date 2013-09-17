@@ -13,6 +13,7 @@ function Sensordrone(peripheral) {
   this._rxCharacteristic = null;
 
   this.uuid = peripheral.uuid;
+  this._rxQueue = [];
 
   this._peripheral.on('disconnect', this.onDisconnect.bind(this));
 }
@@ -73,7 +74,7 @@ Sensordrone.prototype.discoverServicesAndCharacteristics = function(callback) {
 };
 
 Sensordrone.prototype.txData = function(bytes, callback) {
-  this.once('data', callback);
+  this._rxQueue.push(callback);
 
   this._txCharacteristic.write(new Buffer(bytes), false);
 };
@@ -82,7 +83,9 @@ Sensordrone.prototype.onRxData = function(data) {
   if (data[0] === 0x51) {
     var len = data[1];
 
-    this.emit('data', data.slice(2));
+    var callback = this._rxQueue.shift();
+
+    callback(data.slice(2));
   }
 };
 

@@ -222,5 +222,50 @@ Sensordrone.prototype.readRGBC = function(callback) {
   }.bind(this));
 };
 
+Sensordrone.prototype.enableIrTemperature = function(callback) {
+  this.txData([0x05, 0x07, 0x11, 0x00, 0x41, 0x01, 0x02, 0x75, 0x00], function(data) {
+    callback();
+  }.bind(this));
+};
+
+Sensordrone.prototype.disableIrTemperature = function(callback) {
+  this.txData([0x05, 0x07, 0x11, 0x00, 0x41, 0x01, 0x02, 0x00, 0x00], function(data) {
+    callback();
+  }.bind(this));
+};
+
+Sensordrone.prototype.readIrTemperature = function(callback) {
+  this.txData([0x05, 0x06, 0x10, 0x00, 0x41, 0x00, 0x02, 0x00], function(data) {
+
+    var V_OBJ = data.readInt16BE(1) * 1.0;
+
+    this.txData([0x05, 0x06, 0x10, 0x00, 0x41, 0x01, 0x02, 0x00], function(data) {
+      // Terms used for calculating the objects Temperature
+      var a1 = 1.75* Math.pow(10, -3);
+      var a2 = -1.678 * Math.pow(10, -5);
+      var T_REF = 298.15;
+      var b0 = -2.94 * Math.pow(10, -5);
+      var b1 = -5.7 * Math.pow(10, -7);
+      var b2 = 4.63 * Math.pow(10, -9);
+      var c2 = 13.4;
+
+      var s0 = 2.51 * Math.pow(10, -14);
+            
+      var T_DIE = data.readInt16BE(1) * 1.0;
+      
+      var dT_DIE = ((T_DIE / (32.0 * 4.0)) + 273.15); // Should be Kelvin. The *4 was reversed engineered.
+      var dV_OBJ = (V_OBJ * 156.25 * Math.pow(10, -9)); // Should be in Volts
+
+      var Vos = b0 + b1 * (dT_DIE - T_REF) + b2 * Math.pow((dT_DIE - T_REF), 2);
+      var sensitivity = s0 * (1 + a1 * (dT_DIE - T_REF) + a2 * Math.pow((dT_DIE - T_REF), 2));
+      var fVobj = (dV_OBJ - Vos) + c2 * Math.pow((dV_OBJ - Vos), 2);
+      var TMP = Math.pow(dT_DIE, 4) + (fVobj / sensitivity);
+      
+      var temperature = Math.sqrt(Math.sqrt(TMP));
+
+      callback(temperature - 273.15);
+    }.bind(this));
+  }.bind(this));
+};
 
 module.exports = Sensordrone;

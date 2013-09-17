@@ -116,6 +116,28 @@ Sensordrone.discover(function(sensordrone) {
         });
       },
       function(callback) {
+        console.log('enable IR temperature');
+        sensordrone.enableIrTemperature(function() {
+          callback();
+        });
+      },
+      function(callback) {
+        console.log('read IR temperature');
+        setTimeout(function() {
+          sensordrone.readIrTemperature(function(temperature) {
+            console.log('IR temperature = %d °C', temperature.toFixed(1));
+
+            callback();
+          });
+        }, 1000);
+      },
+      function(callback) {
+        console.log('disable IR temperature');
+        sensordrone.disableIrTemperature(function() {
+          callback();
+        });
+      },
+      function(callback) {
         console.log('disconnect');
         sensordrone.disconnect(callback);
       }

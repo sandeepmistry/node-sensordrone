@@ -362,4 +362,31 @@ Sensordrone.prototype.readADC = function(callback) {
   }.bind(this));
 };
 
+Sensordrone.prototype.enableCapacitance = function(callback) {
+  this.txData([0x05, 0x07, 0x11, 0x01, 0x48, 0x01, 0x0f, 0x11, 0x00], function(data) {
+    this.txData([0x05, 0x08, 0x11, 0x01, 0x48, 0x01, 0x05, 0x30, 0x00, 0x00], function(data) {
+      this.txData([0x05, 0x07, 0x11, 0x01, 0x48, 0x01, 0x0b, 0xc0, 0x00], function(data) {
+        callback();
+      }.bind(this));
+    }.bind(this));
+  }.bind(this));
+};
+
+Sensordrone.prototype.disableCapacitance = function(callback) {
+  this.txData([0x05, 0x07, 0x11, 0x01, 0x48, 0x01, 0x0f, 0x00, 0x00], function(data) {
+    callback();
+  }.bind(this));
+};
+
+Sensordrone.prototype.readCapacitance = function(callback) {
+  this.txData([0x05, 0x06, 0x10, 0x01, 0x48, 0x00, 0x03, 0x00], function(data) {
+    var ADC = data.readUInt16BE(2);
+
+    var capacitance = (ADC / 65520.0) * 4000;
+
+    callback(capacitance);
+  }.bind(this));
+};
+
+
 module.exports = Sensordrone;

@@ -198,6 +198,28 @@ Sensordrone.discover(function(sensordrone) {
         });
       },
       function(callback) {
+        console.log('enable capacitance');
+        sensordrone.enableCapacitance(function() {
+          callback();
+        });
+      },
+      function(callback) {
+        console.log('read capacitance');
+        setTimeout(function() {
+          sensordrone.readCapacitance(function(capacitance) {
+            console.log('capacitance = %d fF', capacitance.toFixed(1));
+
+            callback();
+          });
+        }, 1000);
+      },
+      function(callback) {
+        console.log('disable capacitance');
+        sensordrone.disableCapacitance(function() {
+          callback();
+        });
+      },
+      function(callback) {
         console.log('disconnect');
         sensordrone.disconnect(callback);
       }

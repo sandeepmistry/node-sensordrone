@@ -190,6 +190,14 @@ Sensordrone.discover(function(sensordrone) {
         });
       },
       function(callback) {
+        console.log('read ADC');
+        sensordrone.readADC(function(voltage) {
+          console.log('ADC = %d V', voltage.toFixed(1));
+
+          callback();
+        });
+      },
+      function(callback) {
         console.log('disconnect');
         sensordrone.disconnect(callback);
       }

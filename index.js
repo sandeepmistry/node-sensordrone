@@ -353,4 +353,13 @@ Sensordrone.prototype.readReducingGas = function(callback) {
   }.bind(this));
 };
 
+Sensordrone.prototype.readADC = function(callback) {
+  this.txData([0x05 , 0x02, 0x21, 0x00], function(data) {
+    var ADC = data.readUInt16LE(1);
+    var voltage = (ADC / 4095.0) * 3.3;
+
+    callback(voltage);
+  }.bind(this));
+};
+
 module.exports = Sensordrone;

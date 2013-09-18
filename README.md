@@ -7,15 +7,17 @@ Special thanks to [@mrose17](https://github.com/mrose17) for sending me a Sensor
 
 __Notes__
 
-Protocol determined from:
+  * Protocol determined from:
 
-  * [Sensorcon/Sensordrone-iOS-Library](https://github.com/Sensorcon/Sensordrone-iOS-Library)
-  * [Sensorcon/Sensordrone](https://github.com/Sensorcon/Sensordrone)
+    * [Sensorcon/Sensordrone-iOS-Library](https://github.com/Sensorcon/Sensordrone-iOS-Library)
+    * [Sensorcon/Sensordrone](https://github.com/Sensorcon/Sensordrone)
+
+  * __Try resetting the Sensordrone if connection or service/characteristic discovery hangs__
 
 Install
 -------
 
-npm install sensordrone
+    npm install sensordrone
 
 Usage
 -----

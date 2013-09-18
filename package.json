@@ -1,6 +1,6 @@
 {
   "name": "sensordrone",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "node.js lib for the Sensordrone",
   "main": "index.js",
   "scripts": {

@@ -343,7 +343,7 @@ Sensordrone.prototype.disableReducingGas = function(callback) {
 };
 
 Sensordrone.prototype.readReducingGas = function(callback) {
-  this.txData([0x05, 0x02, 0x1c, 0x00], function(data) {
+  this.txData([0x05, 0x02, 0x1d, 0x00], function(data) {
     var ADC = data.readUInt16LE(1);
     var voltage = (ADC / 4095.0) * 3.3;
 

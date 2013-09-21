@@ -91,7 +91,7 @@ Enable/disable:
 
 Read:
 
-    sensordrone.readRGBC(callback(r, g, b, c, lux, temp));
+    sensordrone.readRGBC(callback(r, g, b, c, lux, temp)); // temp in Kelvins
 
 __IR Temperature__
 

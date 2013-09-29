@@ -219,6 +219,17 @@ Sensordrone.discover(function(sensordrone) {
           callback();
         });
       },
+      // function(callback) {
+      //   sensordrone.setupExternalCO2(function() {
+      //     callback();
+      //   });
+      // },
+      // function(callback) {
+      //   sensordrone.readExternalCO2(function(ppm) {
+      //     console.log('external CO2 = %d ppm', ppm);
+      //     callback();
+      //   });
+      // },
       function(callback) {
         console.log('disconnect');
         sensordrone.disconnect(callback);

@@ -148,3 +148,25 @@ Enable/disable:
 Read:
 
     sensordrone.readCapacitance(callback(capacitance));
+
+__UART__
+
+Write:
+
+    sensordrone.writeUart(data, callback);
+
+Read:
+
+    sensordrone.readUart(callback(data));
+
+__[External CO2 sensor](http://www.sensorcon.com/ambient-co2-sensor-carbon-dioxide-sensor-module-for-sensordrone/)__
+
+Setup:
+
+    sensordrone.setupExternalCO2(callback);
+
+Read:
+
+    sensordrone.readExternalCO2(callback(ppm));
+
+

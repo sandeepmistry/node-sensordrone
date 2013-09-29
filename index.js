@@ -388,5 +388,58 @@ Sensordrone.prototype.readCapacitance = function(callback) {
   }.bind(this));
 };
 
+Sensordrone.prototype.writeUart = function(data, callback) {
+  var command = [];
+  command[0] = 0x05;
+  command[1] = 0x02 + data.length;
+  command[2] = 0x24;
+
+  for (var i = 0; i < data.length; i++) {
+    command[i + 3] = data[i];
+  }
+  command[3 + data.length] = 0x00;
+
+  this.txData(command, function(data) {
+    callback()
+  }.bind(this));
+};
+
+Sensordrone.prototype.readUart = function(callback) {
+  this.txData([0x05, 0x02, 0x25, 0x00], function(data) {
+    var readData = data.slice(3, data.length - 1);
+
+    callback(readData);
+  }.bind(this));
+};
+
+Sensordrone.prototype.setupExternalCO2 = function(callback) {
+  this.writeUart(new Buffer('K 1\r\n'), function() {
+    callback();
+  }.bind(this));
+};
+
+Sensordrone.prototype.readExternalCO2 = function(callback) {
+  this.writeUart(new Buffer('Z\r\n'), function() {
+    var s = '';
+
+    var parseUartData = function(data) {
+      s += data.toString().replace(/\s+/g, ' ').replace(/\0/g, '');
+
+      var found = s.match(/ z (\d{5}) (\d{5}) /);
+      if (found) {
+        var measurement1 = parseInt(found[1]);
+        var measurement2 = parseInt(found[2]);
+
+        var measurementAverage = (measurement1 + measurement2) / 2.0;
+
+        callback(measurementAverage);
+      } else {
+        this.readUart(parseUartData);
+      }
+    }.bind(this);
+
+    this.readUart(parseUartData);
+  }.bind(this));
+};
 
 module.exports = Sensordrone;

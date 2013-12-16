@@ -23,7 +23,8 @@ util.inherits(Sensordrone, events.EventEmitter);
 Sensordrone.discover = function(callback) {
   noble.once('stateChange', function() {
     var onDiscover = function(peripheral) {
-      if (peripheral.advertisement.localName.indexOf('Sensordrone') === 0) {
+      if (peripheral.advertisement.localName &&
+            peripheral.advertisement.localName.indexOf('Sensordrone') === 0) {
         noble.removeListener('discover', onDiscover);
         noble.stopScanning();
 

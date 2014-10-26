@@ -1,6 +1,8 @@
 node-sensordrone
 ================
 
+[![Analytics](https://ga-beacon.appspot.com/UA-56089547-1/sandeepmistry/node-sensordrone?pixel)](https://github.com/igrigorik/ga-beacon)
+
 node.js lib for the [Sensorcon](http://sensorcon.com) [Sensordrone](http://sensorcon.com/sensordrone-1/)
 
 Special thanks to [@mrose17](https://github.com/mrose17) for sending me a Sensordrone!

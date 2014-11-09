@@ -1,6 +1,6 @@
 {
   "name": "sensordrone",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "node.js lib for the Sensordrone",
   "main": "index.js",
   "scripts": {
@@ -20,7 +20,7 @@
     "url": "https://github.com/sandeepmistry/node-sensordrone/issues"
   },
   "dependencies": {
-    "noble": "~0.2.0"
+    "noble": "~0.3.6"
   },
   "devDependencies": {
     "async": "~0.2.9",

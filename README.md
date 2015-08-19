@@ -1,5 +1,4 @@
-node-sensordrone
-================
+# node-sensordrone
 
 Node.js lib for the [Sensorcon](http://sensorcon.com) [Sensordrone](http://sensorcon.com/sensordrone-1/)
 
@@ -8,170 +7,224 @@ Special thanks to [@mrose17](https://github.com/mrose17) for sending me a Sensor
 __Notes__
 
   * Protocol determined from:
-
     * [Sensorcon/Sensordrone-iOS-Library](https://github.com/Sensorcon/Sensordrone-iOS-Library)
     * [Sensorcon/Sensordrone](https://github.com/Sensorcon/Sensordrone)
 
   * __Try resetting the Sensordrone if connection or service/characteristic discovery hangs__
 
-Prerequisites
--------------
+## Prerequisites
 
  * See [noble prerequisites](https://github.com/sandeepmistry/noble#prerequisites) for your platform
 
-Install
--------
+## Install
 
-    npm install sensordrone
+```sh
+npm install sensordrone
+```
 
-Usage
------
+## Usage
 
-    var Sensordrone = require('sensordrone');
+```javascript
+var Sensordrone = require('sensordrone');
+```
 
-__Discover__
+### Discover
 
-    Sensordrone.discover(callback(sensordrone));
+```javascript
+Sensordrone.discover(callback(sensordrone));
+```
 
-__Connect__
+### Connect
 
-    sensordrone.connect(callback);
+```javascript
+sensordrone.connect(callback);
+```
 
-__Disconnect__
+### Disconnect
 
-    sensordrone.disconnect(callback);
+```javascript
+sensordrone.disconnect(callback);
+```
 
-__Discover Services and Characteristics__
+### Discover Services and Characteristics
 
-    sensordrone.discoverServicesAndCharacteristics(callback);
+```javascript
+sensordrone.discoverServicesAndCharacteristics(callback);
+```
 
-__Battery Voltage__
+### Battery Voltage
 
-    sensorTag.readBatteryVoltage(callback(voltage));
+```javascript
+sensorTag.readBatteryVoltage(callback(voltage));
+```
 
-__LED's__
+### LED's
 
-    // values 0 - 255
-    sensordrone.setLeds(leftRed, leftGreen, leftBlue, rightRed, rightGreen, rightBlue, callback);
+```javascript
+// values 0 - 255
+sensordrone.setLeds(leftRed, leftGreen, leftBlue, rightRed, rightGreen, rightBlue, callback);
+```
 
-__Ambient Temperature__
+### Ambient Temperature
 
-    sensorTag.readAmbientTemperature(callback(temperature));
+```javascript
+sensorTag.readAmbientTemperature(callback(temperature));
+```
 
-__Humidity__
+### Humidity
 
-    sensorTag.readHumidity(callback(humidity));
+```javascript
+sensorTag.readHumidity(callback(humidity));
+```
 
-__Pressure__
-
-Enable/disable:
-
-    sensordrone.enablePressure(callback);
-
-    sensordrone.disablePressure(callback);
-
-Read:
-
-    sensordrone.readPressure(callback(pressure));
-
-__Altitude (based on pressure)__
-
-Enable/disable:
-
-    sensordrone.enableAltitude(callback);
-
-    sensordrone.disableAltitude(callback);
-
-Read:
-
-    sensordrone.readAltitude(callback(altitude));
-
-__RGBC__
+### Pressure
 
 Enable/disable:
 
-    sensordrone.enableRGBC(callback);
+```javascript
+sensordrone.enablePressure(callback);
 
-    sensordrone.disableRGBC(callback);
+sensordrone.disablePressure(callback);
+```
 
 Read:
 
-    sensordrone.readRGBC(callback(r, g, b, c, lux, temp)); // temp in Kelvins
+```javascript
+sensordrone.readPressure(callback(pressure));
+```
 
-__IR Temperature__
+### Altitude (based on pressure)
 
 Enable/disable:
 
-    sensordrone.enableIrTemperature(callback);
+```javascript
+sensordrone.enableAltitude(callback);
 
-    sensordrone.disableIrTemperature(callback);
+sensordrone.disableAltitude(callback);
+```
 
 Read:
 
-    sensordrone.readIrTemperature(callback(temperature));
+```javascript
+sensordrone.readAltitude(callback(altitude));
+```
 
-__Precision Gas__
-
-    sensordrone.readPrecisionGas(callback(ppmCO));
-
-__Oxidizing Gas__
+### RGBC
 
 Enable/disable:
 
-    sensordrone.enableOxidizingGas(callback);
+```javascript
+sensordrone.enableRGBC(callback);
 
-    sensordrone.disableOxidizingGas(callback);
+sensordrone.disableRGBC(callback);
+```
 
 Read:
 
-    sensordrone.readOxidizingGas(callback(ohms));
+```javascript
+sensordrone.readRGBC(callback(r, g, b, c, lux, temp)); // temp in Kelvins
+```
 
-__Reducing Gas__
+### IR Temperature
 
 Enable/disable:
 
-    sensordrone.enableReducingGas(callback);
+```javascript
+sensordrone.enableIrTemperature(callback);
 
-    sensordrone.disableReducingGas(callback);
+sensordrone.disableIrTemperature(callback);
+```
 
 Read:
 
-    sensordrone.readReducingGas(callback(ohms));
+```javascript
+sensordrone.readIrTemperature(callback(temperature));
+```
 
-__ADC__
+### Precision Gas
 
-    sensordrone.readADC(callback(voltage));
+```javascript
+sensordrone.readPrecisionGas(callback(ppmCO));
+```
 
-__Capacitance__
+### Oxidizing Gas
 
 Enable/disable:
 
-    sensordrone.enableCapacitance(callback);
+```javascript
+sensordrone.enableOxidizingGas(callback);
 
-    sensordrone.disableCapacitance(callback);
+sensordrone.disableOxidizingGas(callback);
+```
 
 Read:
 
-    sensordrone.readCapacitance(callback(capacitance));
+```javascript
+sensordrone.readOxidizingGas(callback(ohms));
+```
 
-__UART__
+### Reducing Gas
+
+Enable/disable:
+
+```javascript
+sensordrone.enableReducingGas(callback);
+
+sensordrone.disableReducingGas(callback);
+```
+
+Read:
+
+```javascript
+sensordrone.readReducingGas(callback(ohms));
+```
+
+### ADC
+
+```javascript
+sensordrone.readADC(callback(voltage));
+```
+
+### Capacitance
+
+Enable/disable:
+
+```javascript
+sensordrone.enableCapacitance(callback);
+
+sensordrone.disableCapacitance(callback);
+```
+
+Read:
+
+```javascript
+sensordrone.readCapacitance(callback(capacitance));
+```
+
+### UART
 
 Write:
 
-    sensordrone.writeUart(data, callback);
+```javascript
+sensordrone.writeUart(data, callback);
+```
 
 Read:
 
-    sensordrone.readUart(callback(data));
+```javascript
+sensordrone.readUart(callback(data));
+```
 
-__[External CO2 sensor](http://www.sensorcon.com/ambient-co2-sensor-carbon-dioxide-sensor-module-for-sensordrone/)__
+### [External CO2 sensor](http://www.sensorcon.com/ambient-co2-sensor-carbon-dioxide-sensor-module-for-sensordrone/)
 
 Setup:
 
-    sensordrone.setupExternalCO2(callback);
+```javascript
+sensordrone.setupExternalCO2(callback);
+```
 
 Read:
 
-    sensordrone.readExternalCO2(callback(ppm));
-
-
+```javascript
+sensordrone.readExternalCO2(callback(ppm));
+```

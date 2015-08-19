@@ -67,7 +67,7 @@ Sensordrone.prototype.discoverServicesAndCharacteristics = function(callback) {
       }
     }
 
-    this._rxCharacteristic.on('read', this.onRxData.bind(this));
+    this._rxCharacteristic.on('data', this.onRxData.bind(this));
     this._rxCharacteristic.notify(true, function() {
       this.readPrecisionGasCalibration(callback);
     }.bind(this));
@@ -147,7 +147,7 @@ Sensordrone.prototype.readPressure = function(callback) {
     var pressureIntValue = data.readUInt16BE(1);
     var pressureIntBits = (data.readUInt8(3) & 0x0c);
     var pressureDecBits = (data.readUInt8(3) & 0x03);
-    
+
     var pascals = (pressureIntValue * 4.0) + pressureIntBits + (pressureDecBits / 4.0);
 
     callback(pascals);
@@ -199,23 +199,23 @@ Sensordrone.prototype.readRGBC = function(callback) {
     var Gcal = 0.2935368922;
     var Bcal = 0.379682891;
     var Ccal = 0.2053011829;
-    
+
     R += R * Rcal;
     G += G * Gcal;
     B += B * Bcal;
     C += C * Ccal;
-    
+
     var X = -0.14282 * R + 1.54924 * G + -0.95641 * B;
     var Y = -0.32466 * R + 1.57837 * G + -0.73191 * B;
     var Z = -0.68202 * R + 0.77073 * G + 0.56332 * B;
-    
+
     var x = X / (X + Y + Z);
     var y = Y / (X + Y + Z);
-    
+
     var n = (x - 0.3320) / (0.1858 - y);
-    
+
     var CCT = 449.0 * Math.pow(n, 3) + 3525.0 * Math.pow(n, 2) + 6823.3 * n + 5520.33;
-    
+
     if (Y < 0) {
         Y = 0;
     }
@@ -252,9 +252,9 @@ Sensordrone.prototype.readIrTemperature = function(callback) {
       var c2 = 13.4;
 
       var s0 = 2.51 * Math.pow(10, -14);
-            
+
       var T_DIE = data.readInt16BE(1) * 1.0;
-      
+
       var dT_DIE = ((T_DIE / (32.0 * 4.0)) + 273.15); // Should be Kelvin. The *4 was reversed engineered.
       var dV_OBJ = (V_OBJ * 156.25 * Math.pow(10, -9)); // Should be in Volts
 
@@ -262,7 +262,7 @@ Sensordrone.prototype.readIrTemperature = function(callback) {
       var sensitivity = s0 * (1 + a1 * (dT_DIE - T_REF) + a2 * Math.pow((dT_DIE - T_REF), 2));
       var fVobj = (dV_OBJ - Vos) + c2 * Math.pow((dV_OBJ - Vos), 2);
       var TMP = Math.pow(dT_DIE, 4) + (fVobj / sensitivity);
-      
+
       var temperature = Math.sqrt(Math.sqrt(TMP));
 
       callback(temperature - 273.15);
@@ -283,7 +283,7 @@ Sensordrone.prototype.readPrecisionGasCalibration = function(callback) {
 Sensordrone.prototype.readPrecisionGas = function(callback) {
   this.txData([0x05, 0x02, 0x20, 0x00], function(data) {
     var gaintStage = data[3];
-    
+
     var gainRes = [
       2200000,
       301961,
@@ -294,7 +294,7 @@ Sensordrone.prototype.readPrecisionGas = function(callback) {
       3494,
       2747
     ];
-    
+
     var ADC = data.readUInt16LE(1);
     var deltaADC = ADC - this._precisionGasBaseline;
     var gasResponse = (deltaADC * 3.0 * Math.pow(10, 9)) / 4096.0;
